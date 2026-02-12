@@ -9,8 +9,8 @@ from sklearn.model_selection import train_test_split
 from src.mlproject.utils import read_sql_data
 from src.mlproject.exception import CustomException
 from src.mlproject.logger import logging
-#from src.mlproject.components.data_transformation import DataTransformation
-#from src.mlproject.components.model_trainer import ModelTrainer
+from src.mlproject.components.data_transformation import DataTransformation
+from src.mlproject.components.model_tranier import ModelTrainer
 
 
 @dataclass
@@ -46,12 +46,25 @@ class DataIngestion:
             )
         except Exception as e:
             raise CustomException(e, sys)
+
 if __name__ == "__main__":
-    obj = DataIngestion()
-    train_data, test_data = obj.initiate_data_ingestion()
-    '''data_transformation = DataTransformation()
-       train_arr, test_arr,_ = data_transformation.initiate_data_transformation(
-        train_data, test_data
-    )
-    model_trainer = ModelTrainer()
-    print(model_trainer.initiate_model_trainer(train_arr, test_arr))'''
+    try:
+        logging.info("===== PIPELINE STARTED =====")
+
+        # Ingestion
+        ingestion = DataIngestion()
+        train_path, test_path = ingestion.initiate_data_ingestion()
+
+        # Transformation
+        transform = DataTransformation()
+        train_arr, test_arr, _ = transform.initiate_data_transformation(train_path, test_path)
+
+        # Training
+        trainer = ModelTrainer()
+        result = trainer.initiate_model_trainer(train_arr, test_arr)
+
+        logging.info(f"PIPELINE COMPLETED → {result}")
+        print(result)
+
+    except Exception as e:
+        raise CustomException(e, sys)
