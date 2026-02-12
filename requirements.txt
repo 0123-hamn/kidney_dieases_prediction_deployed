@@ -1,5 +1,11 @@
 numpy
 pandas
+python-dotenv
+mysql-connector-python
+pymysql
 scikit-learn
-matplotlib
 seaborn
+catboost
+xgboost
+mlflow
+#-e .
