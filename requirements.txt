@@ -9,4 +9,8 @@ catboost
 xgboost
 mlflow
 dill
+fastapi
+uvicorn
+python-multipart
+jinja2
 #-e .

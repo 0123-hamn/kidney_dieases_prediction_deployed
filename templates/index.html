@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kidney Disease Prediction AI</title>
+    <!-- Google Fonts for typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Embedded Stylesheet -->
+    <style>
+        /* 
+  Modern Glassmorphism UI for Kidney Disease Prediction
+  Color Palette: Deep medical blues, vibrant teals, and soft clinical whites
+*/
+
+        :root {
+            --bg-color: #0d1117;
+            --primary: #00ffcc;
+            --primary-dark: #00cccc;
+            --secondary: #3a86ff;
+            --text-main: #f0f6fc;
+            --text-muted: #8b949e;
+            --glass-bg: rgba(22, 27, 34, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --input-bg: rgba(1, 4, 9, 0.7);
+            --input-border: rgba(48, 54, 61, 1);
+            --input-focus: rgba(0, 255, 204, 0.5);
+
+            --success: #2ea043;
+            --danger: #da3633;
+            --warning: #e3b341;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Background Animated Shapes */
+        .background-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+            top: 0;
+            left: 0;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: float 20s infinite ease-in-out alternate;
+        }
+
+        .shape-1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--primary), transparent 70%);
+            top: -100px;
+            left: -100px;
+        }
+
+        .shape-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--secondary), transparent 70%);
+            bottom: -150px;
+            right: -100px;
+            animation-delay: -5s;
+        }
+
+        .shape-3 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.5), transparent 70%);
+            top: 50%;
+            left: 40%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            50% {
+                transform: translate(50px, 30px) scale(1.1);
+            }
+
+            100% {
+                transform: translate(-20px, 60px) scale(0.9);
+            }
+        }
+
+        /* Main Dashboard Container */
+        .dashboard {
+            width: 100%;
+            max-width: 1200px;
+            padding: 40px 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* Header */
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 20px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            filter: drop-shadow(0 0 10px var(--primary-dark));
+        }
+
+        .logo h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, var(--primary));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .dashboard-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Prediction Panel (Glassmorphism) */
+        .prediction-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .form-sections-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .form-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(0, 255, 204, 0.2);
+        }
+
+        .form-section h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-section h2 i {
+            color: var(--primary);
+        }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        /* Input Groups */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: color 0.3s;
+        }
+
+        .input-group:focus-within label {
+            color: var(--primary);
+        }
+
+        input,
+        select {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            padding: 12px 14px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        input::placeholder {
+            color: #4b5563;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--input-focus);
+            background: rgba(1, 4, 9, 0.9);
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238b949e' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: calc(100% - 12px) center;
+            padding-right: 36px;
+        }
+
+        select option {
+            background-color: #1c2128;
+            color: #f0f6fc;
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            padding-top: 30px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        button {
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.05rem;
+            padding: 14px 32px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #000;
+            box-shadow: 0 10px 20px -5px rgba(0, 255, 204, 0.4);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 25px -5px rgba(0, 255, 204, 0.5);
+            background: linear-gradient(135deg, #1affd1, #4a90ff);
+        }
+
+        .submit-btn:active {
+            transform: translateY(1px);
+        }
+
+        .submit-btn.loading {
+            opacity: 0.8;
+            pointer-events: none;
+            background: linear-gradient(135deg, var(--primary-dark), #2a6ae0);
+        }
+
+        .reset-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .reset-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Results Area */
+        .results-container {
+            margin-top: 30px;
+        }
+
+        .result-box {
+            margin: 0 auto;
+            max-width: 600px;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            animation: zoomIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: none;
+            /* Add class 'show' via JS/Flask to display */
+        }
+
+        /* If results exist, display flex */
+        .result-box:not(:empty) {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .result-box.positive {
+            background: rgba(218, 54, 51, 0.1);
+            border-color: rgba(218, 54, 51, 0.3);
+            box-shadow: 0 0 30px inset rgba(218, 54, 51, 0.1);
+        }
+
+        .result-box.negative {
+            background: rgba(0, 255, 204, 0.1);
+            border-color: rgba(0, 255, 204, 0.3);
+            box-shadow: 0 0 30px inset rgba(0, 255, 204, 0.1);
+        }
+
+        .result-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .positive .result-icon {
+            color: var(--danger);
+        }
+
+        .negative .result-icon {
+            color: var(--primary);
+        }
+
+        .result-box h2 {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+        }
+
+        .prediction-text {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .positive .prediction-text {
+            color: #ff6b6b;
+        }
+
+        .negative .prediction-text {
+            color: var(--primary);
+        }
+
+        .disclaimer {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 15px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+            padding-top: 15px;
+        }
+
+        /* Footer */
+        .app-footer {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .prediction-panel {
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo h1 {
+                font-size: 2rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <main class="dashboard">
+        <header class="dashboard-header">
+            <div class="logo">
+                <i class="fa-solid fa-notes-medical"></i>
+                <h1>NephroHemaAI Predictor</h1>
+            </div>
+            <p>Advanced machine learning to predict Chronic Kidney Disease (CKD) based on clinical data.</p>
+        </header>
+
+        <section class="prediction-panel">
+            <form action="/predict_datapoint" method="POST" class="prediction-form" id="predictionForm">
+
+                <div class="form-sections-container">
+                    <!-- SECTION 1: Patient Demographics & Vitals -->
+                    <div class="form-section">
+                        <h2><i class="fa-solid fa-user-doctor"></i> Vitals & Demographics</h2>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label for="age">Age</label>
+                                <input type="number" id="age" name="age" step="any" placeholder="e.g. 48" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="bp">Blood Pressure (mm/Hg)</label>
+                                <input type="number" id="bp" name="bp" step="any" placeholder="e.g. 80" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="sg">Specific Gravity</label>
+                                <select id="sg" name="sg" required>
+                                    <option value="" disabled selected>Select value</option>
+                                    <option value="1.005">1.005</option>
+                                    <option value="1.010">1.010</option>
+                                    <option value="1.015">1.015</option>
+                                    <option value="1.020">1.020</option>
+                                    <option value="1.025">1.025</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="al">Albumin</label>
+                                <select id="al" name="al" required>
+                                    <option value="" disabled selected>Select level (0-5)</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="su">Sugar</label>
+                                <select id="su" name="su" required>
+                                    <option value="" disabled selected>Select level (0-5)</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 2: Blood Tests -->
+                    <div class="form-section">
+                        <h2><i class="fa-solid fa-vial"></i> Blood Analysis</h2>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label for="bgr">Blood Glucose Random (mgs/dl)</label>
+                                <input type="number" id="bgr" name="bgr" step="any" placeholder="e.g. 121" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="bu">Blood Urea (mgs/dl)</label>
+                                <input type="number" id="bu" name="bu" step="any" placeholder="e.g. 36" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="sc">Serum Creatinine (mgs/dl)</label>
+                                <input type="number" id="sc" name="sc" step="any" placeholder="e.g. 1.2" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="sod">Sodium (mEq/L)</label>
+                                <input type="number" id="sod" name="sod" step="any" placeholder="e.g. 135" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="pot">Potassium (mEq/L)</label>
+                                <input type="number" id="pot" name="pot" step="any" placeholder="e.g. 4.0" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="hemo">Hemoglobin (gms)</label>
+                                <input type="number" id="hemo" name="hemo" step="any" placeholder="e.g. 15.4" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 3: Cell Counts -->
+                    <div class="form-section">
+                        <h2><i class="fa-solid fa-microscope"></i> Cell Counts & Composition</h2>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label for="pcv">Packed Cell Volume</label>
+                                <input type="number" id="pcv" name="pcv" step="any" placeholder="e.g. 44" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="wc">White Blood Cell Count (cells/cumm)</label>
+                                <input type="number" id="wc" name="wc" step="any" placeholder="e.g. 7800" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="rc">Red Blood Cell Count (millions/cmm)</label>
+                                <input type="number" id="rc" name="rc" step="any" placeholder="e.g. 5.2" required>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="rbc">Red Blood Cells</label>
+                                <select id="rbc" name="rbc" required>
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="normal">Normal</option>
+                                    <option value="abnormal">Abnormal</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="pc">Pus Cell</label>
+                                <select id="pc" name="pc" required>
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="normal">Normal</option>
+                                    <option value="abnormal">Abnormal</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="pcc">Pus Cell Clumps</label>
+                                <select id="pcc" name="pcc" required>
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="present">Present</option>
+                                    <option value="notpresent">Not Present</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="ba">Bacteria</label>
+                                <select id="ba" name="ba" required>
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="present">Present</option>
+                                    <option value="notpresent">Not Present</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 4: Clinical History -->
+                    <div class="form-section">
+                        <h2><i class="fa-solid fa-file-medical"></i> Clinical History</h2>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label for="htn">Hypertension</label>
+                                <select id="htn" name="htn" required>
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="dm">Diabetes Mellitus</label>
+                                <select id="dm" name="dm" required>
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="cad">Coronary Artery Disease</label>
+                                <select id="cad" name="cad" required>
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="appet">Appetite</label>
+                                <select id="appet" name="appet" required>
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="good">Good</option>
+                                    <option value="poor">Poor</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="pe">Pedal Edema</label>
+                                <select id="pe" name="pe" required>
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="ane">Anemia</label>
+                                <select id="ane" name="ane" required>
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <i class="fa-solid fa-brain"></i> Analyze & Predict
+                    </button>
+                    <button type="reset" class="reset-btn">
+                        <i class="fa-solid fa-rotate-right"></i> Reset
+                    </button>
+                </div>
+            </form>
+
+            <div class="results-container" id="resultsContainer">
+                <div
+                    class="result-box {% if results == 'Chronic Kidney Disease' %}positive{% elif results %}negative{% endif %}">
+                    {% if results %}
+                    {% if results == 'Chronic Kidney Disease' %}
+                    <i class="fa-solid fa-circle-exclamation result-icon"></i>
+                    {% else %}
+                    <i class="fa-solid fa-circle-check result-icon"></i>
+                    {% endif %}
+                    <h2>Prediction Result:</h2>
+                    <h3 class="prediction-text">{{ results }}</h3>
+                    <p class="disclaimer">Note: This is an AI prediction based on the parameters provided. It should not
+                        replace a professional medical diagnosis.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <p>&copy; 2026 Kidney Disease Prediction Project. Powered by Machine Learning.</p>
+    </footer>
+
+    <script>
+        // Simple script to handle visual feedback on form submission if needed
+        document.getElementById('predictionForm').addEventListener('submit', function () {
+            const btn = document.getElementById('submitBtn');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+            btn.classList.add('loading');
+        });
+    </script>
+</body>
+
+</html>
