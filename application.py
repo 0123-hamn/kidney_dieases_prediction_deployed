@@ -4,8 +4,12 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 import pandas as pd
 import os
-from src.mlproject.pipelines.prediction_pipeline import CustomData, PredictPipeline
+#from src.mlproject.pipelines.prediction_pipeline import CustomData, PredictPipeline
 import uvicorn
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "src")))
 
 application = FastAPI() # Rename it because of AWS Deployment
 
