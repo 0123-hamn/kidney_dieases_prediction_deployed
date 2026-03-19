@@ -7,7 +7,9 @@ import os
 from src.mlproject.pipelines.prediction_pipeline import CustomData, PredictPipeline
 import uvicorn
 
-app = FastAPI()
+application = FastAPI() # Rename it because of AWS Deployment
+
+app = application
 
 # Make sure the static directory exists
 os.makedirs("static/css", exist_ok=True)
